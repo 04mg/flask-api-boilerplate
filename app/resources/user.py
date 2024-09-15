@@ -9,11 +9,11 @@ parser.add_argument("email", required=True, help="Email is required")
 
 class UserResource(Resource):
     def get(self, user_id):
-        user = User.query.get_or_404(user_id)
+        user = db.get_or_404(User, user_id)
         return {"id": user.id, "username": user.username, "email": user.email}
 
     def delete(self, user_id):
-        user = User.query.get_or_404(user_id)
+        user = db.get_or_404(User, user_id)
         db.session.delete(user)
         db.session.commit()
         return "", 204

@@ -10,7 +10,7 @@ def create_user(username, email):
 
 
 def get_user(user_id):
-    return User.query.get(user_id)
+    return db.session.get(User, user_id)
 
 
 def delete_user(user):
