@@ -1,13 +1,10 @@
-from flask_restful import Resource, reqparse
+from flask.views import MethodView
+from flask import request
 from ..models.user import User
 from ..extensions import db
 
-parser = reqparse.RequestParser()
-parser.add_argument("username", required=True, help="Username is required")
-parser.add_argument("email", required=True, help="Email is required")
 
-
-class UserResource(Resource):
+class UserResource(MethodView):
     def get(self, user_id):
         user = db.get_or_404(User, user_id)
         return {"id": user.id, "username": user.username, "email": user.email}
@@ -19,16 +16,18 @@ class UserResource(Resource):
         return "", 204
 
 
-class UserListResource(Resource):
+class UserListResource(MethodView):
     def get(self):
+        print("a" *100)
         users = User.query.all()
+        print("b"*100)
         return [
             {"id": user.id, "username": user.username, "email": user.email}
             for user in users
         ]
 
     def post(self):
-        args = parser.parse_args()
+        args = request.get_json()
         new_user = User(username=args["username"], email=args["email"])
         db.session.add(new_user)
         db.session.commit()
