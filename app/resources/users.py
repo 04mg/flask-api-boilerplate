@@ -11,6 +11,5 @@ class UsersMe(MethodView):
         user = db.session.get(User, user_id)
         return {
             "id": user.id,
-            "username": user.username,
             "email": user.email,
         }

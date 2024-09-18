@@ -34,20 +34,17 @@ class TokenRegister(MethodView):
     def post(self):
         data = request.json
         email = data.get("email")
-        username = data.get("username")
         password = data.get("password")
 
-        if not email or not username or not password:
-            return {"message": "Email, username and password are required"}, 400
+        if not email or not password:
+            return {"message": "Email and password are required"}, 400
 
         if User.query.filter_by(email=email).first():
             return {"message": "Email is already in use"}, 400
 
-        if User.query.filter_by(username=username).first():
-            return {"message": "Username is already in use"}, 400
 
         new_user = User(
-            email=email, username=username, password=generate_password_hash(password)
+            email=email, password=generate_password_hash(password)
         )
         db.session.add(new_user)
         db.session.commit()

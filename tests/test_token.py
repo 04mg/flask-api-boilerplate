@@ -31,15 +31,6 @@ def test_post_token_register_without_email_returns_400(test_client, setup_databa
     assert response.status_code == 400
 
 
-def test_post_token_register_without_username_returns_400(test_client, setup_database):
-    response = test_client.post(
-        "/tokens/register",
-        json=TEST_DATA | {"username": None},
-    )
-
-    assert response.status_code == 400
-
-
 def test_post_token_register_with_existing_email_returns_400(
     test_client, setup_database
 ):
@@ -51,22 +42,6 @@ def test_post_token_register_with_existing_email_returns_400(
     response = test_client.post(
         "/tokens/register",
         json=TEST_DATA | {"username": "other"},
-    )
-
-    assert response.status_code == 400
-
-
-def test_post_token_register_with_existing_username_returns_400(
-    test_client, setup_database
-):
-    response = test_client.post(
-        "/tokens/register",
-        json=TEST_DATA,
-    )
-
-    response = test_client.post(
-        "/tokens/register",
-        json=TEST_DATA | {"email": "other@example.com"},
     )
 
     assert response.status_code == 400

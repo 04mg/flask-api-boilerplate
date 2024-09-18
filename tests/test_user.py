@@ -1,7 +1,7 @@
 def test_get_users_me_returns_200(test_client, setup_database):
     response = test_client.post(
         "/tokens/register",
-        json={"email": "test@example.com", "username": "test", "password": "test"},
+        json={"email": "test@example.com", "password": "test"},
     )
 
     response = test_client.get(
@@ -10,7 +10,6 @@ def test_get_users_me_returns_200(test_client, setup_database):
     )
 
     assert response.status_code == 200
-    assert response.json["username"] == "test"
     assert response.json["email"] == "test@example.com"
 
 
