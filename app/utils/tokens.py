@@ -33,6 +33,7 @@ def requires_token(f):
     @wraps(f)
     def decorated(*args, **kwargs):
         token = request.headers.get("Authorization")
+        token = token.removeprefix("Bearer ") if token else None
         if not token:
             return {"message": "Token is missing"}, 401
         try:

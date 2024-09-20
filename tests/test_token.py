@@ -1,3 +1,5 @@
+from unittest.mock import patch
+
 TEST_DATA = {
     "email": "test@example.com",
     "username": "testuser",
@@ -147,3 +149,15 @@ def test_post_token_refresh_with_invalid_refresh_token_returns_401(
     )
 
     assert response.status_code == 401
+
+
+@patch("app.extensions.oauth.google.authorize_access_token")
+def test_token_google_login(mock_authorize_access_token, test_client, setup_database):
+    mock_authorize_access_token.return_value = {
+        "userinfo": {"email": "testuser@example.com"}
+    }
+
+    response = test_client.get("/tokens/google")
+    assert response.status_code == 200
+    response_data = response.json
+    assert "access_token" in response_data

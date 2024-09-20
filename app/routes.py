@@ -1,4 +1,5 @@
 from .resources.tokens import (
+    TokenGoogleLogin,
     TokenLogin,
     TokenRefresh,
     TokenRegister,
@@ -21,4 +22,9 @@ def register_routes(app):
     app.add_url_rule(
         "/tokens/refresh",
         view_func=TokenRefresh.as_view("token_refresh_resource"),
+    )
+
+    app.add_url_rule(
+        "/tokens/google",
+        view_func=TokenGoogleLogin.as_view("token_google_login_resource"),
     )

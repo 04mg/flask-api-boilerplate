@@ -5,7 +5,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 from ..models.user import User
 from ..utils.tokens import generate_tokens
-from ..extensions import db
+from ..extensions import db, oauth
 
 
 class TokenLogin(MethodView):
@@ -26,7 +26,29 @@ class TokenLogin(MethodView):
         return {
             "access_token": access_token,
             "refresh_token": refresh_token,
-            "user_id": user.id,
+        }
+
+
+class TokenGoogleLogin(MethodView):
+    def get(self):
+        try:
+            token = oauth.google.authorize_access_token()
+        except Exception:
+            return {"message": "Invalid access token"}, 401
+
+        email = token["userinfo"]["email"]
+
+        user = User.query.filter_by(email=email).first()
+
+        if not user:
+            user = User(email=email)
+            db.session.add(user)
+            db.session.commit()
+        access_token, refresh_token = generate_tokens(user.id)
+
+        return {
+            "access_token": access_token,
+            "refresh_token": refresh_token,
         }
 
 
@@ -42,10 +64,7 @@ class TokenRegister(MethodView):
         if User.query.filter_by(email=email).first():
             return {"message": "Email is already in use"}, 400
 
-
-        new_user = User(
-            email=email, password=generate_password_hash(password)
-        )
+        new_user = User(email=email, password=generate_password_hash(password))
         db.session.add(new_user)
         db.session.commit()
 
@@ -54,7 +73,6 @@ class TokenRegister(MethodView):
         return {
             "access_token": access_token,
             "refresh_token": refresh_token,
-            "user_id": new_user.id,
         }, 201
 
 

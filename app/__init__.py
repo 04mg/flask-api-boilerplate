@@ -1,7 +1,8 @@
 from flask import Flask
-from .extensions import db, migrate, cors
+from .extensions import db, migrate, cors, oauth
 from .routes import register_routes
 from .config import Config
+from .oauth_registry import register_oauth
 
 
 def create_app(config=Config):
@@ -11,6 +12,9 @@ def create_app(config=Config):
     db.init_app(app)
     migrate.init_app(app, db)
     cors.init_app(app)
+
+    oauth.init_app(app)
+    register_oauth()
 
     register_routes(app)
 
