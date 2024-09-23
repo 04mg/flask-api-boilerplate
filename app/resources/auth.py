@@ -1,11 +1,12 @@
 from flask.views import MethodView
-from flask import request, current_app
+from flask import render_template, request, current_app
 import jwt
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.exceptions import BadRequest, Unauthorized, Conflict
 
 from ..models.user import User
 from ..utils.tokens import generate_tokens
+from ..utils.mail import send
 from ..extensions import db, oauth
 
 
@@ -81,6 +82,7 @@ class AuthRegister(AuthBase):
             raise Conflict("Email is already in use")
 
         new_user = self.create_user(email, password)
+        send(email, "Account created", render_template("new_user.html"))
 
         return self.generate_token_response(new_user.id), 201
 
