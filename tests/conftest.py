@@ -20,4 +20,5 @@ def test_client(app):
 def setup_database():
     db.create_all()
     yield
+    db.session.remove()
     db.drop_all()

@@ -1,4 +1,6 @@
 from flask import Flask
+from werkzeug.exceptions import HTTPException
+from .exceptions import handle_http_exception
 from .extensions import db, migrate, cors, oauth
 from .routes import register_routes
 from .config import Config
@@ -17,5 +19,7 @@ def create_app(config=Config):
     register_oauth()
 
     register_routes(app)
+
+    app.register_error_handler(HTTPException, handle_http_exception)
 
     return app

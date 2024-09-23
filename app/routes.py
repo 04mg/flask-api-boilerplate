@@ -1,30 +1,31 @@
-from .resources.tokens import (
-    TokenGoogleLogin,
-    TokenLogin,
-    TokenRefresh,
-    TokenRegister,
+from .resources.auth import (
+    AuthLoginGoogle,
+    AuthLogin,
+    AuthRefresh,
+    AuthRegister,
 )
-from .resources.users import UsersMe
+from .resources.users import UsersMe, UsersPassword
 
 
 def register_routes(app):
-    app.add_url_rule("/users/me", view_func=UsersMe.as_view("user_list_resource"))
+    app.add_url_rule("/auth/login", view_func=AuthLogin.as_view("token_login_resource"))
 
     app.add_url_rule(
-        "/tokens/login", view_func=TokenLogin.as_view("token_login_resource")
+        "/auth/register",
+        view_func=AuthRegister.as_view("token_register_resource"),
     )
 
     app.add_url_rule(
-        "/tokens/register",
-        view_func=TokenRegister.as_view("token_register_resource"),
+        "/auth/refresh",
+        view_func=AuthRefresh.as_view("token_refresh_resource"),
     )
 
     app.add_url_rule(
-        "/tokens/refresh",
-        view_func=TokenRefresh.as_view("token_refresh_resource"),
+        "/auth/google",
+        view_func=AuthLoginGoogle.as_view("token_google_login_resource"),
     )
 
+    app.add_url_rule("/users/me", view_func=UsersMe.as_view("users_me"))
     app.add_url_rule(
-        "/tokens/google",
-        view_func=TokenGoogleLogin.as_view("token_google_login_resource"),
+        "/users/password", view_func=UsersPassword.as_view("users_password")
     )
