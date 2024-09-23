@@ -1,6 +1,6 @@
-# Flask API Template
+# Flask API Boilerplate
 
-This is a template for a Flask API. It uses Flask-SQLAlchemy and Flask-Migrate extensions for data persistence and migrations.
+This is a boilerplate for a Flask API. It uses Flask-SQLAlchemy and Flask-Migrate extensions for data persistence and migrations.
 
 # Setup
 
