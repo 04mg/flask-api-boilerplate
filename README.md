@@ -17,3 +17,9 @@ Run Flask:
 ```bash
 flask run
 ```
+
+# Postman Collection
+
+A Postman collection is included in the `postman/` directory, as shown below:
+
+![Postman Collection](postman/image.png)

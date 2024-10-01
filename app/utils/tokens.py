@@ -40,7 +40,7 @@ def requires_token(f):
             data = jwt.decode(
                 token, current_app.config["SECRET_KEY"], algorithms=["HS256"]
             )
-            if data["token_type"] != "access":
+            if "token_type" not in data or data["token_type"] != "access":
                 return {"message": "Invalid token type"}, 401
         except jwt.ExpiredSignatureError:
             return {"message": "Token has expired"}, 401
@@ -54,6 +54,7 @@ def requires_token(f):
 def get_user_id_from_token():
     try:
         token = request.headers.get("Authorization")
+        token = token.removeprefix("Bearer ") if token else None
         data = jwt.decode(token, current_app.config["SECRET_KEY"], algorithms=["HS256"])
         return data["user_id"]
     except jwt.ExpiredSignatureError:
