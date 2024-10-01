@@ -1,3 +1,4 @@
+from unittest import mock
 import pytest
 from app import create_app, db
 from app.config import TestConfig
@@ -8,6 +9,12 @@ def app():
     app = create_app(TestConfig)
     with app.app_context():
         yield app
+
+
+@pytest.fixture(scope="session", autouse=True)
+def send_mail_mock():
+    with mock.patch("app.resources.auth.send") as mock_send:
+        yield mock_send
 
 
 @pytest.fixture(scope="module")
